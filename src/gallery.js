@@ -17,12 +17,40 @@ refs.loadMore.addEventListener('click', onLoadMoreButton);
 
 function onSubmitForm(event) {
   event.preventDefault();
+  refs.loadMore.classList.add('visually-hidden');
+  refs.gallery.innerHTML = '';
   photos.query = event.target.elements.searchQuery.value;
   photos.resetPage();
-  photos.fetchPhotos().then(onMarkUp);
+  console;
+  photos
+    .fetchPhotos()
+    .then(hits => {
+      if (hits.length === 0) {
+        throw new Error();
+      }
+      onMarkUp(hits);
+      refs.loadMore.classList.remove('visually-hidden');
+    })
+    .catch(() => {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    });
 }
 function onLoadMoreButton() {
-  photos.fetchPhotos().then(onMarkUp);
+  photos
+    .fetchPhotos()
+    .then(hits => {
+      if (hits.length === 0) {
+        throw new Error();
+      }
+      onMarkUp(hits);
+    })
+    .catch(() => {
+      Notiflix.Notify.failure(
+        "Were sorry, but you've reached the end of search results."
+      );
+    });
 }
 
 function onMarkUp(hits) {
