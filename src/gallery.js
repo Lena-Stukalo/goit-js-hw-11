@@ -1,5 +1,7 @@
 import Notiflix from 'notiflix';
 import Photo from './photo-api-service';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 const axios = require('axios').default;
 
 const BASE_URL =
@@ -44,6 +46,8 @@ function onLoadMoreButton() {
       if (hits.length === 0) {
         throw new Error();
       }
+      Notiflix.Notify.success(`Hooray! We found ${hits.length} images.`);
+
       onMarkUp(hits);
     })
     .catch(() => {
@@ -55,8 +59,17 @@ function onLoadMoreButton() {
 
 function onMarkUp(hits) {
   const markUP = hits
-    .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
-      return `<div class="photo-card">
+    .map(
+      ({
+        largeImageURL,
+        webformatURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
+        return `<a href='${largeImageURL}' class='gallery-link'><div class="photo-card">
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
@@ -76,8 +89,11 @@ function onMarkUp(hits) {
       ${downloads}
     </p>
   </div>
-</div>`;
-    })
+</div></a>`;
+      }
+    )
     .join('');
   refs.gallery.insertAdjacentHTML('beforeend', markUP);
+  const gallery = new SimpleLightbox('.gallery a');
+  gallery.refresh();
 }
