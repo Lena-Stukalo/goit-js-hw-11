@@ -46,9 +46,11 @@ function onLoadMoreButton() {
       if (hits.length === 0) {
         throw new Error();
       }
+      refs.loadMore.classList.add('visually-hidden');
       Notiflix.Notify.success(`Hooray! We found ${hits.length} images.`);
 
       onMarkUp(hits);
+      refs.loadMore.classList.remove('visually-hidden');
     })
     .catch(() => {
       Notiflix.Notify.failure(
