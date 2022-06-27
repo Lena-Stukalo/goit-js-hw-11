@@ -56,6 +56,7 @@ function onLoadMoreButton() {
       Notiflix.Notify.failure(
         "Were sorry, but you've reached the end of search results."
       );
+      refs.loadMore.classList.add('visually-hidden');
     });
 }
 
